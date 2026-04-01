@@ -1,0 +1,267 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hidden Path</title>
+  <style>
+    body { margin:0; padding:0; display:flex; justify-content:center; align-items:center; min-height:100vh; font-family:Georgia, 'Palatino Linotype', serif; background: radial-gradient(circle at 20% 15%, rgba(98, 153, 67, 0.24), transparent 24%), radial-gradient(circle at 75% 20%, rgba(223, 182, 92, 0.14), transparent 18%), linear-gradient(160deg, #091007 0%, #2a2f16 45%, #0f1209 100%); background-size: 220% 220%, 180% 180%, auto; animation: bgShift 12s ease infinite; color:#f5e8c6; text-align:center; }
+    body.arrived { background: radial-gradient(circle at 15% 15%, rgba(255,230,115,0.45), transparent 28%), radial-gradient(circle at 80% 15%, rgba(255,195,80,0.32), transparent 22%), radial-gradient(circle at 60% 75%, rgba(255,245,190,0.22), transparent 28%), linear-gradient(160deg, #5b3b11 0%, #b07c24 40%, #ffdb7f 100%); background-size: 240% 240%, 200% 200%, 180% 180%, auto; animation: warmShift 10s ease infinite; }
+    @keyframes bgShift { 0% { background-position: 0% 0%, 100% 0%, 0% 0%; } 25% { background-position: 110% 10%, 80% 90%, 0% 0%; } 50% { background-position: 100% 100%, 10% 30%, 0% 0%; } 75% { background-position: 5% 90%, 40% 10%, 0% 0%; } 100% { background-position: 0% 0%, 100% 0%, 0% 0%; } }
+    @keyframes warmShift { 0% { background-position: 0% 0%, 100% 5%, 100% 90%, 0% 0%; } 25% { background-position: 90% 20%, 80% 45%, 10% 65%, 0% 0%; } 50% { background-position: 80% 80%, 20% 95%, 25% 35%, 0% 0%; } 75% { background-position: 15% 60%, 5% 25%, 95% 20%, 0% 0%; } 100% { background-position: 0% 0%, 100% 5%, 100% 90%, 0% 0%; } }
+    main { width:min(92vw, 520px); border:2px solid rgba(155,132,79,0.45); border-radius:24px; padding:20px; background: linear-gradient(180deg, rgba(18, 18, 10, 0.98), rgba(11, 12, 4, 0.96)); box-shadow:0 15px 40px rgba(0,0,0,0.45); }
+    h1 { margin:0 0 8px; font-size:clamp(1.5rem, 4vw, 2.4rem); letter-spacing:0.08em; text-transform:uppercase; color:#f9e1a8; text-shadow:0 0 14px rgba(191, 151, 61, 0.4); }
+    p { margin:10px 0; }
+    #status { font-size:1rem; color:#f8e7b4; }
+    .indicator { font-size:clamp(1.2rem, 5vw, 1.85rem); font-weight:700; margin:14px 0; color:#e9d196; }
+    #proximityBar { position:relative; height:16px; border:2px solid rgba(176,156,90,0.45); border-radius:999px; background: linear-gradient(90deg, rgba(36, 60, 20, 0.95), rgba(56, 80, 32, 0.95)); overflow:hidden; margin:0 auto 14px; width:min(86vw, 380px); box-shadow: inset 0 0 12px rgba(0,0,0,0.4); }
+    #proximityBar span { display:block; height:100%; width:0%; background: linear-gradient(90deg, rgba(122, 202, 94, 0.95), rgba(205, 237, 146, 0.95)); box-shadow:0 0 12px rgba(182, 219, 117, 0.35); transition:width 0.35s ease; }
+    #locationDetails { display:none; margin-top:18px; padding:18px; border:1px solid rgba(188, 167, 104, 0.25); border-radius:18px; background: rgba(34, 34, 16, 0.75); }
+    #locationImage { height:160px; border-radius:14px; background: linear-gradient(135deg, rgba(102,133,71,0.20), rgba(32,30,14,0.98)); background-size:cover; background-position:center; display:flex; align-items:center; justify-content:center; color:#f4e4be; font-size:0.95rem; letter-spacing:0.04em; text-transform:uppercase; }
+    #locationHint { margin:12px 0 0; font-size:0.98rem; line-height:1.6; color:#f4e5c2; }
+    #nextBtn { display:none; margin-top:16px; padding:12px 18px; font-size:1rem; border:none; border-radius:12px; background:#7f5a14; color:#f5e8c6; cursor:pointer; transition:background .2s, transform .2s; box-shadow:0 6px 18px rgba(125, 90, 20, 0.24); }
+    #nextBtn:hover { background:#a77b32; transform:translateY(-1px); }
+    #nextBtn:hover { background:#6bb9ff; }
+    #passwordModal {
+      position:fixed;
+      inset:0;
+      display:none;
+      justify-content:center;
+      align-items:center;
+      background:rgba(0,0,0,0.5);
+      z-index:1000;
+    }
+    #passwordModal.active { display:flex; }
+    #passwordDialog {
+      width:min(90vw, 340px);
+      background:rgba(14, 12, 8, 0.98);
+      border:2px solid rgba(183, 149, 86, 0.85);
+      border-radius:18px;
+      padding:18px 18px 14px;
+      box-shadow:0 18px 40px rgba(0,0,0,0.35);
+      color:#f5e1af;
+      text-align:left;
+    }
+    #passwordDialog h2 { margin:0 0 10px; font-size:1.1rem; letter-spacing:0.08em; text-transform:uppercase; }
+    #passwordDialog input { width:100%; padding:10px 12px; border:1px solid rgba(176, 149, 86, 0.55); border-radius:10px; background:#2b2818; color:#f4e8c0; margin:8px 0; }
+    #passwordDialog button { min-width:100px; margin:8px 6px 0 0; padding:10px 12px; border:none; border-radius:10px; background:#7f5a14; color:#f5e8c6; cursor:pointer; }
+    #passwordDialog button:hover { background:#a77b32; }
+    #passwordError { margin-top:8px; color:#ffb47d; font-size:0.9rem; min-height:1.2em; }
+    .error { color:#ffb47d; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1 id="pageTitle">Hidden Path</h1>
+    <p id="status">Venter på lokation...</p>
+    <div class="indicator" id="proximityLabel">Proximity: --</div>
+    <div id="proximityBar"><span></span></div>
+    <button id="nextBtn">Næste</button>
+    <div id="locationDetails">
+      <div id="locationImage">Image placeholder</div>
+      <p id="locationHint">Reach the location to see the instructions.</p>
+    </div>
+
+    <p id="locationInfo"></p>
+  </main>
+
+  <div id="passwordModal" aria-hidden="true">
+    <div id="passwordDialog">
+      <h2>Kode</h2>
+      <p>Indtast koden</p>
+      <input id="passwordInput" type="text" autocomplete="off" placeholder="ABC" />
+      <div id="passwordError"></div>
+      <div>
+        <button id="passwordCancel">Annuller</button>
+        <button id="passwordConfirm">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const points = [
+    { name:'Rosenholm', lat:56.333442806992394, lon:10.330489961815301, maxDistance:7000, approvedDistance:10, hint:'Vendisk.', imageText:'Cü nas godåt' },
+    { name:'Rosenholm', lat:56.33357570971736, lon:10.329320341330101, maxDistance:300, approvedDistance:10, hint:'Tamilsk', imageText:'என்ன எங்களை இணைக்கிறது?' },
+    { name:'Skov', lat:56.340451155670934, lon:10.309932887996977, maxDistance:2000, approvedDistance:10, hint:'Grønlandsk.', imageText:'Suup assigiinngiiaqqissinnaavagut?' },
+    { name:'Krogsbæk kirkeruin', lat:56.36188833148167, lon:10.261013085224032, maxDistance:2000, approvedDistance:10, hint:'Estisk.', imageText:'Mis meid ühendab?' },
+    { name:'Grusgraven', lat:56.39580526918633, lon:10.244994774231834, maxDistance:4000, approvedDistance:10, hint:'Islandsk.', imageText:'Hvað heldur okkur saman?' },
+    { name:'Vandposten', lat:56.39574806144184, lon:10.245528669406774, maxDistance:400, approvedDistance:15, hint:'Færisk.', imageText:'Hvat heldur okkum saman?' },
+    { name:'Sjellebrostenen', lat:56.403843746715424, lon:10.241208200657706, maxDistance:2000, approvedDistance:10, hint:'Svensk.', imageText:'Vad håller oss sammen?' },
+    { name:'Genforeningssten', lat:56.38236272071255, lon:10.292774669475591, maxDistance:2000, approvedDistance:10, hint:'Norsk.', imageText:'Hva holder oss sammen?' },
+    { name:'Mark', lat:56.37866020303969, lon:10.36203302220751, maxDistance:5000, approvedDistance:10, hint:'Tysk.', imageText:'Was hält uns zusammen?' },
+    { name:'Træ', lat:56.36561054404289, lon:10.38135782168346, maxDistance:2000, approvedDistance:10, hint:'Britisk.', imageText:'Hvad halda oss saman?' },
+    ];
+
+    let currentIndex = 0;
+    let currentPosition = null;
+    let watchId = null;
+    const statusEl = document.getElementById('status');
+    const proximityLabel = document.getElementById('proximityLabel');
+    const nextBtn = document.getElementById('nextBtn');
+    const locationInfo = document.getElementById('locationInfo');
+    const pageTitle = document.getElementById('pageTitle');
+    const passwordModal = document.getElementById('passwordModal');
+    const passwordInput = document.getElementById('passwordInput');
+    const passwordError = document.getElementById('passwordError');
+    const passwordConfirm = document.getElementById('passwordConfirm');
+    const passwordCancel = document.getElementById('passwordCancel');
+    const jumpCodes = {
+      A: 0, B: 1, C: 2, D: 3, E: 4,
+      F: 5, G: 6, H: 7, I: 8, J: 9
+    };
+
+    function toRadians(deg) { return deg * Math.PI / 180; }
+    function toDegrees(rad) { return rad * 180 / Math.PI; }
+
+    function haversine(lat1, lon1, lat2, lon2) {
+      const R = 6371000;
+      const dLat = toRadians(lat2 - lat1);
+      const dLon = toRadians(lon2 - lon1);
+      const a = Math.sin(dLat/2)**2 + Math.cos(toRadians(lat1))*Math.cos(toRadians(lat2))*Math.sin(dLon/2)**2;
+      const c = 2*Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      return R*c;
+    }
+
+    function bearing(lat1, lon1, lat2, lon2) {
+      const y = Math.sin(toRadians(lon2 - lon1)) * Math.cos(toRadians(lat2));
+      const x = Math.cos(toRadians(lat1)) * Math.sin(toRadians(lat2)) - Math.sin(toRadians(lat1)) * Math.cos(toRadians(lat2)) * Math.cos(toRadians(lon2 - lon1));
+      return (toDegrees(Math.atan2(y, x)) + 360) % 360;
+    }
+
+    function formatDistance(m) { return m < 1000 ? `${Math.round(m)} m` : `${(m/1000).toFixed(2)} km`; }
+
+    function setStatus(message, isError=false) {
+      statusEl.textContent = message;
+      statusEl.className = isError ? 'error' : '';
+    }
+
+    function renderTarget() {
+      // The current target is intentionally hidden from the UI.
+    }
+
+    function handleTitleClick(event) {
+      openPasswordModal();
+    }
+
+    function openPasswordModal() {
+      passwordError.textContent = '';
+      passwordInput.value = '';
+      passwordModal.classList.add('active');
+      passwordModal.setAttribute('aria-hidden', 'false');
+      passwordInput.focus();
+      setStatus('Indtast kode for at hoppe til et punkt.');
+    }
+
+    function closePasswordModal() {
+      passwordModal.classList.remove('active');
+      passwordModal.setAttribute('aria-hidden', 'true');
+      passwordError.textContent = '';
+      passwordInput.value = '';
+      setStatus('');
+    }
+
+    function confirmPassword() {
+      const entered = passwordInput.value.trim().toUpperCase();
+      if (!jumpCodes.hasOwnProperty(entered)) {
+        passwordError.textContent = 'Forkert kode';
+        return;
+      }
+      const index = jumpCodes[entered];
+      currentIndex = index;
+      closePasswordModal();
+      setStatus(`Quick jump to point ${entered} successful.`);
+      updateUI();
+    }
+
+    function jumpToPointIndex(index) {
+      if (index < 0 || index >= points.length) return;
+      currentIndex = index;
+      setStatus(`Quick jump to point ${String.fromCharCode(65 + index)}.`);
+      updateUI();
+    }
+
+    function getImageFileForIndex(index) {
+      const letter = String.fromCharCode(65 + index);
+      return `${letter}.jpg`;
+    }
+
+    function updateUI() {
+      if (!currentPosition) return;
+      const p = points[currentIndex];
+      const dist = haversine(currentPosition.lat, currentPosition.lon, p.lat, p.lon);
+      const locationDetails = document.getElementById('locationDetails');
+      const locationImage = document.getElementById('locationImage');
+      const locationHint = document.getElementById('locationHint');
+      const proximityLabel = document.getElementById('proximityLabel');
+      const proximityBar = document.querySelector('#proximityBar span');
+      const ratio = Math.min(dist / p.maxDistance, 1);
+      const fill = 100 - Math.round(ratio * 100);
+
+      proximityLabel.textContent = `Afstand: ${formatDistance(dist)}`;
+      proximityBar.style.width = `${fill}%`;
+      locationInfo.textContent = '';
+
+      if (dist <= p.approvedDistance) {
+        document.body.classList.add('arrived');
+        setStatus(`You have found ${p.name}!`);
+        const imageFile = getImageFileForIndex(currentIndex);
+        locationImage.style.backgroundImage = `url('${imageFile}')`;
+        locationImage.textContent = '';
+        locationHint.textContent = p.hint;
+        locationDetails.style.display = 'block';
+        nextBtn.style.display = 'inline-block';
+      } else {
+        document.body.classList.remove('arrived');
+        setStatus('');
+        locationImage.style.backgroundImage = '';
+        locationImage.textContent = 'Image placeholder';
+        locationDetails.style.display = 'none';
+        nextBtn.style.display = 'none';
+      }
+    }
+
+    function handleGeoSuccess(pos) {
+      currentPosition = { lat: pos.coords.latitude, lon: pos.coords.longitude };
+      renderTarget();
+      updateUI();
+    }
+
+    function handleGeoError(err) {
+      setStatus('Geolocation error: ' + err.message, true);
+    }
+
+    pageTitle.addEventListener('click', handleTitleClick);
+    passwordConfirm.addEventListener('click', confirmPassword);
+    passwordCancel.addEventListener('click', closePasswordModal);
+    passwordInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') confirmPassword();
+      if (event.key === 'Escape') closePasswordModal();
+    });
+
+    nextBtn.addEventListener('click', () => {
+      if (currentIndex < points.length - 1) {
+        currentIndex += 1;
+        renderTarget();
+        updateUI();
+        setStatus(`Next target: ${points[currentIndex].name}. Keep moving.`);
+      } else {
+        setStatus('You found all locations. Mission complete!');
+        nextBtn.style.display='none';
+      }
+    });
+
+    function init() {
+      if (!navigator.geolocation) {
+        setStatus('Geolocation not supported by browser', true);
+        return;
+      }
+      renderTarget();
+      setStatus('Requesting location updates...');
+      watchId = navigator.geolocation.watchPosition(handleGeoSuccess, handleGeoError, { enableHighAccuracy: true, maximumAge: 1000, timeout: 15000 });
+    }
+
+    renderTarget();
+    init();
+  </script>
+</body>
+</html>
