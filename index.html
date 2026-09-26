@@ -5,48 +5,48 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Hidden Path</title>
   <style>
-    body { margin:0; padding:0; display:flex; justify-content:center; align-items:center; min-height:100vh; font-family:Georgia, 'Palatino Linotype', serif; background: radial-gradient(circle at 20% 15%, rgba(98, 153, 67, 0.24), transparent 24%), radial-gradient(circle at 75% 20%, rgba(223, 182, 92, 0.14), transparent 18%), linear-gradient(160deg, #091007 0%, #2a2f16 45%, #0f1209 100%); background-size: 220% 220%, 180% 180%, auto; animation: bgShift 12s ease infinite; color:#f5e8c6; text-align:center; }
-    body.arrived { background: radial-gradient(circle at 15% 15%, rgba(255,230,115,0.45), transparent 28%), radial-gradient(circle at 80% 15%, rgba(255,195,80,0.32), transparent 22%), radial-gradient(circle at 60% 75%, rgba(255,245,190,0.22), transparent 28%), linear-gradient(160deg, #5b3b11 0%, #b07c24 40%, #ffdb7f 100%); background-size: 240% 240%, 200% 200%, 180% 180%, auto; animation: warmShift 10s ease infinite; }
-    @keyframes bgShift { 0% { background-position: 0% 0%, 100% 0%, 0% 0%; } 25% { background-position: 110% 10%, 80% 90%, 0% 0%; } 50% { background-position: 100% 100%, 10% 30%, 0% 0%; } 75% { background-position: 5% 90%, 40% 10%, 0% 0%; } 100% { background-position: 0% 0%, 100% 0%, 0% 0%; } }
-    @keyframes warmShift { 0% { background-position: 0% 0%, 100% 5%, 100% 90%, 0% 0%; } 25% { background-position: 90% 20%, 80% 45%, 10% 65%, 0% 0%; } 50% { background-position: 80% 80%, 20% 95%, 25% 35%, 0% 0%; } 75% { background-position: 15% 60%, 5% 25%, 95% 20%, 0% 0%; } 100% { background-position: 0% 0%, 100% 5%, 100% 90%, 0% 0%; } }
-    main { width:min(92vw, 520px); border:2px solid rgba(155,132,79,0.45); border-radius:24px; padding:20px; background: linear-gradient(180deg, rgba(18, 18, 10, 0.98), rgba(11, 12, 4, 0.96)); box-shadow:0 15px 40px rgba(0,0,0,0.45); }
-    h1 { margin:0 0 8px; font-size:clamp(1.5rem, 4vw, 2.4rem); letter-spacing:0.08em; text-transform:uppercase; color:#f9e1a8; text-shadow:0 0 14px rgba(191, 151, 61, 0.4); }
-    p { margin:10px 0; }
-    #status { font-size:1rem; color:#f8e7b4; }
-    .indicator { font-size:clamp(1.2rem, 5vw, 1.85rem); font-weight:700; margin:14px 0; color:#e9d196; }
-    #proximityBar { position:relative; height:16px; border:2px solid rgba(176,156,90,0.45); border-radius:999px; background: linear-gradient(90deg, rgba(36, 60, 20, 0.95), rgba(56, 80, 32, 0.95)); overflow:hidden; margin:0 auto 14px; width:min(86vw, 380px); box-shadow: inset 0 0 12px rgba(0,0,0,0.4); }
-    #proximityBar span { display:block; height:100%; width:0%; background: linear-gradient(90deg, rgba(122, 202, 94, 0.95), rgba(205, 237, 146, 0.95)); box-shadow:0 0 12px rgba(182, 219, 117, 0.35); transition:width 0.35s ease; }
-    #locationDetails { display:none; margin-top:18px; padding:18px; border:1px solid rgba(188, 167, 104, 0.25); border-radius:18px; background: rgba(34, 34, 16, 0.75); }
-    #locationImage { height:clamp(120px, 40vw, 200px); border-radius:14px; background: linear-gradient(135deg, rgba(102,133,71,0.20), rgba(32,30,14,0.98)); background-size:cover; background-position:center; display:flex; align-items:center; justify-content:center; color:#f4e4be; font-size:0.95rem; letter-spacing:0.04em; text-transform:uppercase; }
-    #locationHint { margin:12px 0 0; font-size:0.98rem; line-height:1.6; color:#f4e5c2; }
-    #nextBtn { display:none; margin-top:16px; padding:14px 20px; font-size:1rem; border:none; border-radius:12px; background:#7f5a14; color:#f5e8c6; cursor:pointer; transition:background .2s, transform .2s; box-shadow:0 6px 18px rgba(125, 90, 20, 0.24); }
-    #nextBtn:hover { background:#a77b32; transform:translateY(-1px); }
+    body { margin:0; padding:0; display:flex; justify-content:center; align-items:center; min-height:100vh; font-family:Georgia, 'Palatino Linotype', serif; background: radial-gradient(circle at 20% 15%, rgba(255,179,71,0.16), transparent 26%), radial-gradient(circle at 78% 22%, rgba(224,123,57,0.14), transparent 22%), linear-gradient(160deg, #2a1608 0%, #4a2c12 45%, #1f1206 100%); background-size: 220% 220%, 180% 180%, auto; animation: bgShift 18s ease infinite; color:#f7ecd9; text-align:center; }
+    body.arrived { background: radial-gradient(circle at 15% 15%, rgba(255,230,115,0.40), transparent 28%), radial-gradient(circle at 80% 15%, rgba(255,195,80,0.30), transparent 22%), radial-gradient(circle at 60% 75%, rgba(192,57,43,0.28), transparent 30%), linear-gradient(160deg, #5b3b11 0%, #b07c24 40%, #ffdb7f 100%); background-size: 240% 240%, 200% 200%, 180% 180%, auto; animation: warmShift 16s ease infinite; }
+    @keyframes bgShift { 0% { background-position: 0% 0%, 100% 0%, 0% 0%; } 25% { background-position: 30% 10%, 70% 30%, 0% 0%; } 50% { background-position: 20% 30%, 25% 20%, 0% 0%; } 75% { background-position: 10% 20%, 40% 15%, 0% 0%; } 100% { background-position: 0% 0%, 100% 0%, 0% 0%; } }
+    @keyframes warmShift { 0% { background-position: 0% 0%, 100% 5%, 100% 90%, 0% 0%; } 25% { background-position: 25% 15%, 75% 30%, 15% 40%, 0% 0%; } 50% { background-position: 20% 25%, 25% 40%, 30% 25%, 0% 0%; } 75% { background-position: 10% 15%, 15% 20%, 40% 15%, 0% 0%; } 100% { background-position: 0% 0%, 100% 5%, 100% 90%, 0% 0%; } }
+    main { width:min(92vw, 520px); border:2px solid rgba(255,179,71,0.45); border-radius:24px; padding:24px; background: linear-gradient(180deg, rgba(43, 26, 13, 0.98), rgba(30, 18, 8, 0.96)); box-shadow:0 15px 40px rgba(0,0,0,0.45); }
+    h1 { margin:0 0 10px; font-size:clamp(1.6rem, 4.5vw, 2.5rem); letter-spacing:0.08em; text-transform:uppercase; color:#ffcf7d; text-shadow:0 0 14px rgba(255,179,71,0.35); }
+    p { margin:12px 0; line-height:1.7; }
+    #status { font-size:1.05rem; color:#f7ecd9; line-height:1.6; }
+    .indicator { font-size:clamp(1.3rem, 5vw, 1.9rem); font-weight:700; margin:16px 0; color:#ffb347; }
+    #proximityBar { position:relative; height:18px; border:2px solid rgba(255,179,71,0.45); border-radius:999px; background: linear-gradient(90deg, rgba(90, 58, 30, 0.95), rgba(107, 68, 35, 0.95)); overflow:hidden; margin:0 auto 16px; width:min(86vw, 380px); box-shadow: inset 0 0 12px rgba(0,0,0,0.4); }
+    #proximityBar span { display:block; height:100%; width:0%; background: linear-gradient(90deg, rgba(224, 123, 57, 0.95), rgba(255, 179, 71, 0.95)); box-shadow:0 0 12px rgba(255,179,71,0.4); transition:width 0.35s ease; }
+    #locationDetails { display:none; margin-top:18px; padding:18px; border:1px solid rgba(255,179,71,0.30); border-radius:18px; background: rgba(43, 26, 13, 0.75); }
+    #locationImage { height:clamp(120px, 40vw, 200px); border-radius:14px; background: linear-gradient(135deg, rgba(224,123,57,0.20), rgba(30,18,8,0.98)); background-size:cover; background-position:center; display:flex; align-items:center; justify-content:center; color:#f7ecd9; font-size:0.95rem; letter-spacing:0.04em; text-transform:uppercase; }
+    #locationHint { margin:12px 0 0; font-size:1rem; line-height:1.7; color:#f7ecd9; }
+    #nextBtn { display:none; margin-top:18px; padding:16px 24px; font-size:1.05rem; border:none; border-radius:12px; background:#c85a17; color:#fff8e7; cursor:pointer; transition:background .2s, transform .2s; box-shadow:0 6px 18px rgba(200, 90, 23, 0.35); }
+    #nextBtn:hover { background:#e07b39; transform:translateY(-1px); }
     #passwordModal {
       position:fixed;
       inset:0;
       display:none;
       justify-content:center;
       align-items:center;
-      background:rgba(0,0,0,0.5);
+      background:rgba(20,10,4,0.6);
       z-index:1000;
     }
     #passwordModal.active { display:flex; }
     #passwordDialog {
       width:min(90vw, 340px);
-      background:rgba(14, 12, 8, 0.98);
-      border:2px solid rgba(183, 149, 86, 0.85);
+      background:rgba(31, 18, 8, 0.98);
+      border:2px solid rgba(255,179,71,0.85);
       border-radius:18px;
       padding:18px 18px 14px;
-      box-shadow:0 18px 40px rgba(0,0,0,0.35);
-      color:#f5e1af;
+      box-shadow:0 18px 40px rgba(0,0,0,0.4);
+      color:#f7ecd9;
       text-align:left;
     }
-    #passwordDialog h2 { margin:0 0 10px; font-size:1.1rem; letter-spacing:0.08em; text-transform:uppercase; }
-    #passwordDialog input { width:100%; padding:10px 12px; border:1px solid rgba(176, 149, 86, 0.55); border-radius:10px; background:#2b2818; color:#f4e8c0; margin:8px 0; }
-    #passwordDialog button { min-width:100px; margin:8px 6px 0 0; padding:12px 16px; border:none; border-radius:10px; background:#7f5a14; color:#f5e8c6; cursor:pointer; }
-    #passwordDialog button:hover { background:#a77b32; }
-    #passwordError { margin-top:8px; color:#ffb47d; font-size:0.9rem; min-height:1.2em; }
-    .error { color:#ffb47d; }
+    #passwordDialog h2 { margin:0 0 10px; font-size:1.15rem; letter-spacing:0.08em; text-transform:uppercase; color:#ffcf7d; }
+    #passwordDialog input { width:100%; padding:12px 12px; font-size:16px; border:1px solid rgba(255,179,71,0.55); border-radius:10px; background:#2b1a0d; color:#f7ecd9; margin:8px 0; }
+    #passwordDialog button { min-width:100px; margin:8px 6px 0 0; padding:14px 16px; font-size:1rem; border:none; border-radius:10px; background:#c85a17; color:#fff8e7; cursor:pointer; }
+    #passwordDialog button:hover { background:#e07b39; }
+    #passwordError { margin-top:8px; color:#ff9b7d; font-size:0.95rem; min-height:1.2em; }
+    .error { color:#ff9b7d; }
     button, input, #pageTitle { touch-action: manipulation; }
   </style>
 </head>
